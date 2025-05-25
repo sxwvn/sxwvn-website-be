@@ -42,5 +42,30 @@ router.get('/video/:filename', async (req, res) => {
   }
 })
 
+// Route to stream audio
+router.get('/audio/:filename', async (req, res) => {
+  const { filename } = req.params
+
+  try {
+    const command = new GetObjectCommand({
+      Bucket: 'sxwvn-artifacts',
+      Key: `music/${filename}`
+    })
+
+    const { Body, ContentType, ContentLength } = await s3Client.send(command)
+    const mimeType = mime.lookup(filename) || 'application/octet-stream'
+
+    res.writeHead(200, {
+      'Content-Type': mimeType,
+      'Content-Length': ContentLength
+    })
+
+    Body.pipe(res)
+  } catch (err) {
+    console.error('Error streaming audio:', err)
+    res.status(500).send('Failed to stream audio')
+  }
+})
+
 // By default export router, can call it whatever you want on the other side
 export default router

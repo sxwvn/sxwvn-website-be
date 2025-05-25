@@ -6,7 +6,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "server": "node api/server.js",
+    "server": "nodemon api/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "The Chicken Lady",
@@ -16,5 +16,8 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mime-types": "^3.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
