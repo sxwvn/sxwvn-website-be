@@ -6,6 +6,7 @@ dotenv.config()
 
 // Create an Express application
 const app = new Express()
+app.use(Express.json())
 
 // Attach data router, include 'data' before the endpoint name
 app.use('/api', DataRouter)
