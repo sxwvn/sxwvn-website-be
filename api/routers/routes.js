@@ -2,13 +2,16 @@ import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 import Express from 'express'
 import mime from 'mime-types'
 import dotenv from 'dotenv'
-import crypto from 'crypto';
+import crypto from 'crypto'
 
 dotenv.config()
 
 // For auth
-let currentToken = null;
-let expiryTime = null;
+let currentToken = null
+let expiryTime = null
+let random = 0
+const element = ["Dream Big, Fart Loud", "Listen to your intrusive thoughts", "Mew mew mew mew mew mew mew mew mew", 
+  "I'm pure data, 0110, no fun without me >:)", "I am inside your firewall", "You can't stop me."]
 
 // Make router that the main app will listen for
 const router = new Express.Router()
@@ -24,13 +27,14 @@ const s3Client = new S3Client({
 
 // Auth helper
 function generateToken() {
-  currentToken = crypto.randomBytes(16).toString('hex');
-  expiryTime = new Date(Date.now() + 5 * 60 * 1000); // 5 mins from now
-  console.log(`New token generated: ${currentToken} (expires at ${expiryTime})`);
+  currentToken = crypto.randomBytes(16).toString('hex')
+  expiryTime = new Date(Date.now() + 5 * 60 * 1000) // 5 mins from now
+  random = Math.floor(Math.random() * element.length)
+  console.log(`New token generated: ${currentToken} (expires at ${expiryTime}, with broadcast ${element[random]})`)
 }
 
-generateToken();
-setInterval(generateToken, 5 * 60 * 1000);
+generateToken()
+setInterval(generateToken, 5 * 60 * 1000)
 
 // Route to stream video
 router.get('/video/:filename', async (req, res) => {
@@ -88,24 +92,25 @@ router.get('/Y2hpY2tlbi1sYWR5/dG9rZW56', (req, res) => {
   }
 
   res.json({
-    Token: currentToken,
+    ID: currentToken,
+    Broadcast:element[random],
     Expiry: expiryTime
   })
 })
 
-router.post('/Y2hpY2tlbi1sYWR5/bW9uc3RlcnNz', (req, res) => {
+router.post('/Y2hpY2tlbi1sYWR5/dG9rZW56', (req, res) => {
   const { Token } = req.body;
 
   if (!Token) {
-    return res.status(400).json({ error: 'Token is required' })
+    return res.status(400).json({ error: 'Perhaps you are missing something...' })
   }
 
   if (Token !== currentToken) {
-    return res.status(401).json({ success: false, reason: 'Invalid token' })
+    return res.status(401).json({ success: false, reason: 'Not what Im looking for :/' })
   }
 
   if (new Date() > expiryTime) {
-    return res.status(401).json({ success: false, reason: 'Token expired' })
+    return res.status(401).json({ success: false, reason: 'Wait for my next broadcast. Ring, ring.' })
   }
 
   res.json({ success: true, message: process.env.TEXT_KEY })
