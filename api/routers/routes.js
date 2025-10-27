@@ -113,7 +113,7 @@ router.post('/Y2hpY2tlbi1sYWR5/dG9rZW56', (req, res) => {
     return res.status(401).json({ success: false, reason: 'Wait for my next broadcast. Ring, ring.' })
   }
 
-  res.json({ success: true, message: process.env.TEXT_KEY })
+  res.json({ success: true, message: process.env.TEXT_KEY, next: process.env.REDIRECT_LINK })
 })
 
 // By default export router, can call it whatever you want on the other side
