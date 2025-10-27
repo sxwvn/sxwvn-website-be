@@ -1,8 +1,10 @@
 import Express from 'express'
 import DataRouter from './routers/routes.js'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 dotenv.config()
+app.use(cors())
 
 // Create an Express application
 const app = new Express()
